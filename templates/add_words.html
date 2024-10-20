@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Добавить слова</h2>
+    <form method="POST" action="{{ url_for('add_words') }}" class="p-4 border rounded shadow-lg bg-light animated-form">
+        <div class="form-group">
+            <label for="words">Введите слова (через запятую или пробел):</label>
+            <textarea id="words" name="words" class="form-control form-control-lg" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Добавить</button>
+    </form>
+</div>
+
+<style>
+    .animated-form {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        max-width: 600px; /* Ограничиваем ширину формы */
+        margin: auto; /* Центрируем форму */
+        min-height: 200px; /* Устанавливаем минимальную высоту формы */
+    }
+
+    .animated-form:hover {
+        transform: translateY(-5px); /* Плавный подъем формы */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Увеличенная тень при наведении */
+    }
+
+    textarea {
+        transition: height 0.2s ease; /* Плавный переход высоты текстового поля */
+        min-height: 80px; /* Минимальная высота текстового поля */
+        resize: vertical; /* Разрешаем изменять размер только по вертикали */
+    }
+
+    .btn {
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #0056b3; /* Темнее при наведении */
+        transform: scale(1.05); /* Увеличение кнопки при наведении */
+    }
+
+    h2 {
+        color: #343a40; /* Цвет заголовка */
+    }
+</style>
+{% endblock %}

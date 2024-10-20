@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5 text-center">
+    <h2 class="mb-4">Уникальные иероглифы</h2>
+
+    <div class="mb-4">
+        <!-- Кнопка для копирования уникальных иероглифов -->
+        <button id="copy-button" class="btn btn-success mx-2">Копировать все иероглифы</button>
+
+        <!-- Кнопка для скачивания уникальных иероглифов в Word -->
+        <a href="{{ url_for('download') }}">
+            <button class="btn btn-primary mx-2">Скачать в Word</button>
+        </a>
+    </div>
+
+    <ol id="character-list" class="list-group mx-auto" style="max-width: 400px;">
+        {% for index, char in enumerate(characters, start=1) %}
+            <li class="list-group-item">{{ index }}. {{ char }}</li>
+        {% endfor %}
+    </ol>
+
+    <!-- Скрытый элемент для хранения уникальных иероглифов -->
+    <textarea id="unique-characters" style="opacity: 0; position: absolute; pointer-events: none;">
+        {{ characters | join(' ') }}
+    </textarea>
+
+    <div class="mt-4">
+        <a href="{{ url_for('add_words') }}" class="btn btn-secondary">Добавить больше слов</a>
+    </div>
+</div>
+
+<!-- JavaScript для копирования текста -->
+<script>
+    document.getElementById('copy-button').addEventListener('click', function() {
+        const textArea = document.getElementById('unique-characters');
+        textArea.select();
+        document.execCommand('copy');
+        alert('Уникальные иероглифы скопированы в буфер обмена!');
+    });
+</script>
+
+<style>
+    h2 {
+        color: #343a40; /* Цвет заголовка */
+    }
+
+    .list-group-item {
+        font-size: 1.25rem; /* Увеличиваем размер шрифта для иероглифов */
+        background-color: #f8f9fa; /* Светлый фон для элементов списка */
+        border: 1px solid #dee2e6; /* Рамка для элементов списка */
+    }
+
+    .list-group-item:hover {
+        background-color: #e9ecef; /* Цвет фона при наведении */
+    }
+
+    button {
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        padding: 8px 12px; /* Уменьшаем размеры кнопок */
+    }
+
+    button:hover {
+        transform: translateY(-2px); /* Подъем кнопки при наведении */
+    }
+</style>
+{% endblock %}
