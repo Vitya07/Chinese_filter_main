@@ -1,4 +1,4 @@
-vitya07-chinese-filter-main-d416.twc1.net
+Ссылка на сайт: vitya07-chinese-filter-main-d416.twc1.net
 
 
 Примерный сценарий использования приложения
