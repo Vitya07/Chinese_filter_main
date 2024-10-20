@@ -66,7 +66,6 @@
             {% if 'user_id' in session %}
                 <a href="{{ url_for('add_words') }}">Добавить слова</a>
                 <a href="{{ url_for('filter_words') }}">Показать уникальные иероглифы</a>
-                <a href="{{ url_for('clear') }}">Очистить все слова</a>
                 <a href="{{ url_for('logout') }}">Выйти</a>
             {% else %}
                 <a href="{{ url_for('login') }}">Вход</a>
