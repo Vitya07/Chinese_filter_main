@@ -1,3 +1,4 @@
+import io
 from flask import Flask, render_template, request, redirect, url_for, session, send_file
 from flask_sqlalchemy import SQLAlchemy
 from io import BytesIO
@@ -84,7 +85,7 @@ def filter_words():
     if 'user_id' not in session:
         return redirect(url_for('login'))
     user_id = session['user_id']
-    user_words = Word.query.filter_by(user_id=user_id).order_by(Word.id.desc()).all()  # Получаем слова, сортируя по ID в обратном порядке
+    user_words = Word.query.filter_by(user_id=user_id).order_by(Word.id.desc()).all()
 
     # Уникальные иероглифы в порядке добавления (новые сверху)
     seen = set()
@@ -118,7 +119,7 @@ def download():
     if 'user_id' not in session:
         return redirect(url_for('login'))
     user_id = session['user_id']
-    user_words = Word.query.filter_by(user_id=user_id).order_by(Word.id.desc()).all()  # Получаем слова, сортируя по ID в обратном порядке
+    user_words = Word.query.filter_by(user_id=user_id).order_by(Word.id.desc()).all()
 
     # Создаем документ Word
     doc = Document()
@@ -147,4 +148,35 @@ def download():
     # Возвращаем файл для скачивания
     return send_file(bio, as_attachment=True, download_name='unique_characters.docx', mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
 
+# Функция для скачивания выбранных иероглифов в Word
+@app.route('/download_selected', methods=['POST'])
+def download_selected():
+    data = request.json
+    characters = data.get('characters', [])
 
+    if not characters:  # Если не переданы конкретные символы, отправляем ответ с ошибкой
+        return {'error': 'Не выбраны символы'}, 400
+
+    # Создаём документ Word
+    doc = Document()
+    doc.add_heading('Выбранные иероглифы', level=1)
+    table = doc.add_table(rows=len(characters), cols=1)
+
+    for i, char in enumerate(characters):
+        row_cells = table.cell(i, 0)
+        row_cells.text = char
+
+    # Сохраняем документ во временный буфер
+    buffer = BytesIO()
+    doc.save(buffer)
+    buffer.seek(0)
+
+    return send_file(
+        buffer,
+        as_attachment=True,
+        download_name='selected_characters.docx',
+        mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    )
+
+if __name__ == '__main__':
+    app.run(debug=True)
