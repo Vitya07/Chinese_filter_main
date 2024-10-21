@@ -2,34 +2,6 @@
 {% block content %}
 <div class="container mt-5 text-center">
     
-    <!-- Группа кнопок "Копировать всё" -->
-    <div class="mb-4">
-        <h5 class="mb-3">Копировать всё</h5>
-        <div class="d-flex justify-content-center gap-2">
-            <button id="copy-button" class="btn btn-outline-success btn-sm">Копировать всё</button>
-            <button id="copy-all-no-numbers" class="btn btn-outline-success btn-sm">Копировать всё без нумерации</button>
-        </div>
-    </div>
-
-    <!-- Группа кнопок "Копировать выбранные" -->
-    <div class="mb-4">
-        <h5 class="mb-3">Копировать выбранные</h5>
-        <div class="d-flex justify-content-center gap-2">
-            <button id="copy-selected-button" class="btn btn-outline-warning btn-sm">Копировать выбранные</button>
-            <button id="copy-selected-no-numbers" class="btn btn-outline-warning btn-sm">Копировать выбранные без нумерации</button>
-        </div>
-    </div>
-
-    <!-- Группа кнопок "Дополнительные действия" -->
-    <div class="mb-4">
-        <h5 class="mb-3">Дополнительные действия</h5>
-        <div class="d-flex justify-content-center gap-2">
-            <button id="clear-checkboxes-button" class="btn btn-outline-danger btn-sm">Очистить чекбоксы</button>
-            <button id="download-selected-button" class="btn btn-outline-primary btn-sm">Скачать выбранные в Word</button>
-            <a href="{{ url_for('download') }}" class="btn btn-outline-info btn-sm">Скачать все в Word</a>
-        </div>
-    </div>
-    
     <h2 class="mb-4">Уникальные иероглифы</h2>
 
     <form id="character-form">
@@ -46,110 +18,137 @@
         </ol>
     </form>
 
+    <!-- Группа кнопок "Копировать всё" -->
+    <div class="mb-4">
+        <h5 class="mb-3">Копировать всё</h5>
+        <div class="d-flex justify-content-center gap-2">
+            <button id="copy-button" class="btn btn-outline-success btn-sm">Копировать всё</button>
+            <button id="copy-all-no-numbers" class="btn btn-outline-success btn-sm">Копировать всё без нумерации</button>
+            <button id="copy-all-horizontal" class="btn btn-outline-info btn-sm">Копировать по горизонтали (без нумерации)</button>
+            <button id="copy-all-vertical" class="btn btn-outline-info btn-sm">Копировать по вертикали (без нумерации)</button>
+        </div>
+    </div>
+
+    <!-- Группа кнопок "Копировать выбранные" -->
+    <div class="mb-4">
+        <h5 class="mb-3">Копировать выбранные</h5>
+        <div class="d-flex justify-content-center gap-2">
+            <button id="copy-selected-button" class="btn btn-outline-warning btn-sm">Копировать выбранные</button>
+            <button id="copy-selected-no-numbers" class="btn btn-outline-warning btn-sm">Копировать выбранные без нумерации</button>
+            <button id="copy-selected-horizontal" class="btn btn-outline-info btn-sm">Копировать выбранные (по горизонтали)</button>
+            <button id="copy-selected-horizontal-no-numbers" class="btn btn-outline-info btn-sm">Копировать по горизонтали (без нумерации, выбранные)</button>
+            <button id="copy-selected-vertical" class="btn btn-outline-info btn-sm">Копировать по вертикали (без нумерации, выбранные)</button>
+        </div>
+    </div>
+
+    <!-- Группа кнопок "Дополнительные действия" -->
+    <div class="mb-4">
+        <h5 class="mb-3">Дополнительные действия</h5>
+        <div class="d-flex justify-content-center gap-2">
+            <button id="clear-checkboxes-button" class="btn btn-outline-danger btn-sm">Очистить чекбоксы</button>
+            <button id="download-selected-button" class="btn btn-outline-primary btn-sm">Скачать выбранные в Word</button>
+            <a href="{{ url_for('download') }}" class="btn btn-outline-info btn-sm">Скачать все в Word</a>
+        </div>
+    </div>
+
+
     <div class="mt-4">
         <a href="{{ url_for('clear') }}" class="btn btn-danger">Очистить все слова</a>
     </div>
 </div>
 
 <script>
-    // Функция для копирования всех уникальных иероглифов
+    // Универсальная функция для копирования текста
+    function copyToClipboard(text) {
+        const tempInput = document.createElement('textarea');
+        tempInput.value = text;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        alert('Текст скопирован в буфер обмена!');
+    }
+
+    // Копировать все иероглифы
     document.getElementById('copy-button').addEventListener('click', function() {
         const allCharacters = Array.from(document.querySelectorAll('.character-text'))
                                    .map(el => el.textContent.trim());
-
-        // Создаем текстовое представление иероглифов
-        const textToCopy = allCharacters.join('\n'); // Если нужно с нумерацией
-
-        // Используем Clipboard API для копирования
-        navigator.clipboard.writeText(textToCopy).then(function() {
-            alert('Все иероглифы скопированы в буфер обмена!');
-        }, function(err) {
-            console.error('Ошибка копирования: ', err);
-        });
+        copyToClipboard(allCharacters.join('\n'));
     });
 
-    // Функция для копирования выбранных иероглифов
+    // Копировать все иероглифы без нумерации
+    document.getElementById('copy-all-no-numbers').addEventListener('click', function() {
+        const allCharacters = Array.from(document.querySelectorAll('.character-text'))
+                                   .map(el => el.textContent.replace(/^\d+\.\s*/, '').trim());
+        copyToClipboard(allCharacters.join('\n'));
+    });
+
+    // Копировать все иероглифы по горизонтали (без нумерации)
+    document.getElementById('copy-all-horizontal').addEventListener('click', function() {
+        const allCharacters = Array.from(document.querySelectorAll('.character-text'))
+                                   .map(el => el.textContent.replace(/^\d+\.\s*/, '').trim());
+        copyToClipboard(allCharacters.join('\t'));
+    });
+
+    // Копировать выбранные иероглифы по горизонтали (без нумерации)
+    document.getElementById('copy-selected-horizontal-no-numbers').addEventListener('click', function() {
+        const selectedCharacters = Array.from(document.querySelectorAll('input[name="selected_chars"]:checked'))
+                                        .map(checkbox => checkbox.value.trim());
+        if (selectedCharacters.length === 0) {
+            alert('Пожалуйста, выберите хотя бы один иероглиф.');
+            return;
+        }
+        copyToClipboard(selectedCharacters.join('\t'));
+    });
+
+    // Копировать все иероглифы по вертикали (без нумерации)
+    document.getElementById('copy-all-vertical').addEventListener('click', function() {
+        const allCharacters = Array.from(document.querySelectorAll('.character-text'))
+                                   .map(el => el.textContent.replace(/^\d+\.\s*/, '').trim());
+        copyToClipboard(allCharacters.join('\n'));
+    });
+
+    // Копировать выбранные иероглифы по вертикали (без нумерации)
+    document.getElementById('copy-selected-vertical').addEventListener('click', function() {
+        const selectedCharacters = Array.from(document.querySelectorAll('input[name="selected_chars"]:checked'))
+                                        .map(checkbox => checkbox.value.trim());
+        if (selectedCharacters.length === 0) {
+            alert('Пожалуйста, выберите хотя бы один иероглиф.');
+            return;
+        }
+        copyToClipboard(selectedCharacters.join('\n'));
+    });
+
+    // Копировать выбранные иероглифы
     document.getElementById('copy-selected-button').addEventListener('click', function() {
         const selectedCharacters = Array.from(document.querySelectorAll('input[name="selected_chars"]:checked'))
                                         .map(checkbox => checkbox.nextElementSibling.parentElement.nextElementSibling.textContent.trim());
-
-        // Проверяем, выбраны ли символы
         if (selectedCharacters.length === 0) {
-            alert('Пожалуйста, выберите хотя бы один иероглиф для копирования.');
+            alert('Пожалуйста, выберите хотя бы один иероглиф.');
             return;
         }
-
-        const textToCopy = selectedCharacters.join('\n'); // Скопировать с новой строки
-
-        // Копируем выбранные символы в буфер обмена
-        navigator.clipboard.writeText(textToCopy).then(function() {
-            alert('Выбранные иероглифы скопированы в буфер обмена!');
-        }, function(err) {
-            console.error('Ошибка копирования: ', err);
-        });
+        copyToClipboard(selectedCharacters.join('\n'));
     });
 
-    // Функция для копирования всех иероглифов без нумерации и через пробел
-    document.getElementById('copy-all-no-numbers').addEventListener('click', function() {
-        const allCharacters = Array.from(document.querySelectorAll('.character-text'))
-                                   .map(el => el.textContent.replace(/^\d+\.\s*/, '').trim()); // Убираем цифры и пробелы
-
-        // Создаем текстовое представление иероглифов через пробел
-        const textToCopy = allCharacters.join(' '); // Изменено на пробел вместо новой строки
-
-        // Используем Clipboard API для копирования
-        navigator.clipboard.writeText(textToCopy).then(function() {
-            alert('Все иероглифы без нумерации скопированы в буфер обмена!');
-        }, function(err) {
-            console.error('Ошибка копирования: ', err);
-        });
-    });
-
-    // Функция для копирования выбранных иероглифов без нумерации и через пробел
-    document.getElementById('copy-selected-no-numbers').addEventListener('click', function() {
-        const selectedCharacters = Array.from(document.querySelectorAll('input[name="selected_chars"]:checked'))
-                                        .map(checkbox => checkbox.nextElementSibling.parentElement.nextElementSibling.textContent.replace(/^\d+\.\s*/, '').trim());
-
-        // Проверяем, выбраны ли символы
-        if (selectedCharacters.length === 0) {
-            alert('Пожалуйста, выберите хотя бы один иероглиф для копирования.');
-            return;
-        }
-
-        // Создаем текстовое представление иероглифов через пробел
-        const textToCopy = selectedCharacters.join(' '); // Изменено на пробел вместо новой строки
-
-        // Копируем выбранные символы в буфер обмена
-        navigator.clipboard.writeText(textToCopy).then(function() {
-            alert('Выбранные иероглифы без нумерации скопированы в буфер обмена!');
-        }, function(err) {
-            console.error('Ошибка копирования: ', err);
-        });
-    });
-
-    // Функция для очистки чекбоксов
+    // Очистить чекбоксы
     document.getElementById('clear-checkboxes-button').addEventListener('click', function() {
         const checkboxes = document.querySelectorAll('input[name="selected_chars"]');
         checkboxes.forEach(checkbox => checkbox.checked = false);
         alert('Все чекбоксы очищены!');
     });
 
-    // Функция для скачивания выбранных иероглифов в Word
+    // Скачать выбранные иероглифы в Word
     document.getElementById('download-selected-button').addEventListener('click', function() {
         const selectedCharacters = Array.from(document.querySelectorAll('input[name="selected_chars"]:checked'))
                                         .map(checkbox => checkbox.value);
 
         fetch('/download_selected', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ characters: selectedCharacters })
         })
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Не выбраны символы');
-            }
+            if (!response.ok) throw new Error('Не выбраны символы');
             return response.blob();
         })
         .then(blob => {
@@ -161,9 +160,7 @@
             a.click();
             a.remove();
         })
-        .catch(error => {
-            alert(error.message);
-        });
+        .catch(error => alert(error.message));
     });
 </script>
 {% endblock %}
