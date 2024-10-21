@@ -1,64 +1,73 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container mt-5 text-center">
-    
-    <h2 class="mb-4">Уникальные иероглифы</h2>
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Уникальные иероглифы</h2>
 
-    <form id="character-form">
-        <ol id="character-list" class="list-group mx-auto" style="max-width: 400px;">
-            {% for index, char in enumerate(characters, start=1) %}
-                <li class="list-group-item">
-                    <label class="checkbox-container">
-                        <input type="checkbox" class="custom-checkbox" name="selected_chars" value="{{ char }}">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="character-text">{{ index }}. {{ char }}</span>
-                </li>
-            {% endfor %}
-        </ol>
-    </form>
+    <div class="row">
+        <!-- Минималистичный Dropdown -->
+        <div class="col-md-3 mb-3">
+            <div class="dropdown">
+                <button 
+                    class="btn btn-primary dropdown-toggle w-100 py-2" 
+                    type="button" 
+                    id="dropdownMenuButton" 
+                    data-bs-toggle="dropdown" 
+                    aria-expanded="false">
+                    ⚙️ Опции
+                </button>
+                <ul class="dropdown-menu shadow-sm" aria-labelledby="dropdownMenuButton">
+                    <li><button class="dropdown-item" id="copy-all-horizontal">Горизонтально</button></li>
+                    <li><button class="dropdown-item" id="copy-all-vertical">Вертикально</button></li>
+                    <li><button class="dropdown-item" id="copy-selected-horizontal-no-numbers">Выбранные (гориз.)</button></li>
+                    <li><button class="dropdown-item" id="copy-selected-vertical">Выбранные (вертик.)</button></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><button class="dropdown-item text-danger" id="clear-checkboxes-button">Очистить чекбоксы</button></li>
+                    <li><button class="dropdown-item text-primary" id="download-selected-button">Скачать выбранные в Word</button></li>
+                    <li><a href="{{ url_for('download') }}" class="dropdown-item">Скачать все в Word</a></li>
+                </ul>
+            </div>
+        </div>
 
-    <!-- Группа кнопок "Копировать всё" -->
-    <div class="mb-4">
-        <h5 class="mb-3">Копировать всё</h5>
-        <div class="d-flex justify-content-center gap-2">
-            <button id="copy-button" class="btn btn-outline-success btn-sm">Копировать всё</button>
-            <button id="copy-all-no-numbers" class="btn btn-outline-success btn-sm">Копировать всё без нумерации</button>
-            <button id="copy-all-horizontal" class="btn btn-outline-info btn-sm">Копировать по горизонтали (без нумерации)</button>
-            <button id="copy-all-vertical" class="btn btn-outline-info btn-sm">Копировать по вертикали (без нумерации)</button>
+        <!-- Таблица с иероглифами -->
+        <div class="col-md-9">
+            <form id="character-form">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover text-center">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>№</th>
+                                <th>Иероглиф</th>
+                                <th>Выбор</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for index, char in enumerate(characters, start=1) %}
+                                <tr>
+                                    <td>{{ index }}</td>
+                                    <td class="character-text">{{ char }}</td>
+                                    <td>
+                                        <input type="checkbox" class="form-check-input" name="selected_chars" value="{{ char }}">
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- Группа кнопок "Копировать выбранные" -->
-    <div class="mb-4">
-        <h5 class="mb-3">Копировать выбранные</h5>
-        <div class="d-flex justify-content-center gap-2">
-            <button id="copy-selected-button" class="btn btn-outline-warning btn-sm">Копировать выбранные</button>
-            <button id="copy-selected-no-numbers" class="btn btn-outline-warning btn-sm">Копировать выбранные без нумерации</button>
-            <button id="copy-selected-horizontal" class="btn btn-outline-info btn-sm">Копировать выбранные (по горизонтали)</button>
-            <button id="copy-selected-horizontal-no-numbers" class="btn btn-outline-info btn-sm">Копировать по горизонтали (без нумерации, выбранные)</button>
-            <button id="copy-selected-vertical" class="btn btn-outline-info btn-sm">Копировать по вертикали (без нумерации, выбранные)</button>
-        </div>
-    </div>
-
-    <!-- Группа кнопок "Дополнительные действия" -->
-    <div class="mb-4">
-        <h5 class="mb-3">Дополнительные действия</h5>
-        <div class="d-flex justify-content-center gap-2">
-            <button id="clear-checkboxes-button" class="btn btn-outline-danger btn-sm">Очистить чекбоксы</button>
-            <button id="download-selected-button" class="btn btn-outline-primary btn-sm">Скачать выбранные в Word</button>
-            <a href="{{ url_for('download') }}" class="btn btn-outline-info btn-sm">Скачать все в Word</a>
-        </div>
-    </div>
-
-
-    <div class="mt-4">
+    <div class="mt-4 text-center">
         <a href="{{ url_for('clear') }}" class="btn btn-danger">Очистить все слова</a>
     </div>
 </div>
 
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+
+<!-- JS логика -->
 <script>
-    // Универсальная функция для копирования текста
     function copyToClipboard(text) {
         const tempInput = document.createElement('textarea');
         tempInput.value = text;
@@ -66,81 +75,53 @@
         tempInput.select();
         document.execCommand('copy');
         document.body.removeChild(tempInput);
-        alert('Текст скопирован в буфер обмена!');
     }
 
-    // Копировать все иероглифы
-    document.getElementById('copy-button').addEventListener('click', function() {
-        const allCharacters = Array.from(document.querySelectorAll('.character-text'))
-                                   .map(el => el.textContent.trim());
-        copyToClipboard(allCharacters.join('\n'));
-    });
-
-    // Копировать все иероглифы без нумерации
-    document.getElementById('copy-all-no-numbers').addEventListener('click', function() {
-        const allCharacters = Array.from(document.querySelectorAll('.character-text'))
-                                   .map(el => el.textContent.replace(/^\d+\.\s*/, '').trim());
-        copyToClipboard(allCharacters.join('\n'));
-    });
-
-    // Копировать все иероглифы по горизонтали (без нумерации)
     document.getElementById('copy-all-horizontal').addEventListener('click', function() {
         const allCharacters = Array.from(document.querySelectorAll('.character-text'))
-                                   .map(el => el.textContent.replace(/^\d+\.\s*/, '').trim());
+            .map(el => el.textContent.trim());
         copyToClipboard(allCharacters.join('\t'));
     });
 
-    // Копировать выбранные иероглифы по горизонтали (без нумерации)
-    document.getElementById('copy-selected-horizontal-no-numbers').addEventListener('click', function() {
-        const selectedCharacters = Array.from(document.querySelectorAll('input[name="selected_chars"]:checked'))
-                                        .map(checkbox => checkbox.value.trim());
-        if (selectedCharacters.length === 0) {
-            alert('Пожалуйста, выберите хотя бы один иероглиф.');
-            return;
-        }
-        copyToClipboard(selectedCharacters.join('\t'));
-    });
-
-    // Копировать все иероглифы по вертикали (без нумерации)
     document.getElementById('copy-all-vertical').addEventListener('click', function() {
         const allCharacters = Array.from(document.querySelectorAll('.character-text'))
-                                   .map(el => el.textContent.replace(/^\d+\.\s*/, '').trim());
+            .map(el => el.textContent.trim());
         copyToClipboard(allCharacters.join('\n'));
     });
 
-    // Копировать выбранные иероглифы по вертикали (без нумерации)
+    document.getElementById('copy-selected-horizontal-no-numbers').addEventListener('click', function() {
+        const selectedCharacters = Array.from(document.querySelectorAll('input[name="selected_chars"]:checked'))
+            .map(checkbox => checkbox.value.trim());
+        if (selectedCharacters.length === 0) {
+            alert('Пожалуйста, выберите хотя бы один иероглиф.');
+        } else {
+            copyToClipboard(selectedCharacters.join('\t'));
+        }
+    });
+
     document.getElementById('copy-selected-vertical').addEventListener('click', function() {
         const selectedCharacters = Array.from(document.querySelectorAll('input[name="selected_chars"]:checked'))
-                                        .map(checkbox => checkbox.value.trim());
+            .map(checkbox => checkbox.value.trim());
         if (selectedCharacters.length === 0) {
             alert('Пожалуйста, выберите хотя бы один иероглиф.');
-            return;
+        } else {
+            copyToClipboard(selectedCharacters.join('\n'));
         }
-        copyToClipboard(selectedCharacters.join('\n'));
     });
 
-    // Копировать выбранные иероглифы
-    document.getElementById('copy-selected-button').addEventListener('click', function() {
-        const selectedCharacters = Array.from(document.querySelectorAll('input[name="selected_chars"]:checked'))
-                                        .map(checkbox => checkbox.nextElementSibling.parentElement.nextElementSibling.textContent.trim());
-        if (selectedCharacters.length === 0) {
-            alert('Пожалуйста, выберите хотя бы один иероглиф.');
-            return;
-        }
-        copyToClipboard(selectedCharacters.join('\n'));
-    });
-
-    // Очистить чекбоксы
     document.getElementById('clear-checkboxes-button').addEventListener('click', function() {
-        const checkboxes = document.querySelectorAll('input[name="selected_chars"]');
-        checkboxes.forEach(checkbox => checkbox.checked = false);
-        alert('Все чекбоксы очищены!');
+        document.querySelectorAll('input[name="selected_chars"]').forEach(checkbox => checkbox.checked = false);
+        
     });
 
-    // Скачать выбранные иероглифы в Word
     document.getElementById('download-selected-button').addEventListener('click', function() {
         const selectedCharacters = Array.from(document.querySelectorAll('input[name="selected_chars"]:checked'))
-                                        .map(checkbox => checkbox.value);
+            .map(checkbox => checkbox.value);
+
+        if (selectedCharacters.length === 0) {
+            alert('Пожалуйста, выберите хотя бы один иероглиф.');
+            return;
+        }
 
         fetch('/download_selected', {
             method: 'POST',
@@ -148,19 +129,55 @@
             body: JSON.stringify({ characters: selectedCharacters })
         })
         .then(response => {
-            if (!response.ok) throw new Error('Не выбраны символы');
+            if (!response.ok) throw new Error('Ошибка при скачивании');
             return response.blob();
         })
         .then(blob => {
-            const url = window.URL.createObjectURL(blob);
+            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = 'selected_characters.docx';
-            document.body.appendChild(a);
             a.click();
-            a.remove();
         })
         .catch(error => alert(error.message));
     });
 </script>
+
+<!-- Стили -->
+<style>
+    body {
+        background-color: #f9f9f9; /* Мягкий фон */
+        font-family: 'Arial', sans-serif; /* Современный шрифт */
+    }
+
+    .table {
+        background-color: #ffffff; /* Цвет фона для таблицы */
+        border-radius: 12px; /* Скругленные углы */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Тень для таблицы */
+    }
+
+    .table th {
+        background-color: #007bff; /* Цвет заголовков таблицы */
+        color: #ffffff; /* Цвет текста заголовков */
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f2f2f2; /* Цвет для нечётных строк */
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #e0f7fa; /* Цвет при наведении */
+    }
+
+    .form-check-input {
+        width: 20px; /* Размер чекбокса */
+        height: 20px; /* Размер чекбокса */
+        margin-left: 10px; /* Отступ слева от чекбокса */
+    }
+
+    .character-text {
+        font-size: 1.5rem; /* Размер шрифта для иероглифов */
+        color: #333; /* Цвет иероглифов */
+    }
+</style>
 {% endblock %}
