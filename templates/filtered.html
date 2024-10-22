@@ -2,7 +2,9 @@
 {% block content %}
 <div class="container mt-5">
     <h2 class="mb-4 text-center">Уникальные иероглифы</h2>
-
+    <div class="text-center mb-4">
+        <h4>Всего иероглифов: {{ characters | length }}</h4>
+    </div>
     <div class="row">
         <!-- Минималистичный Dropdown -->
         <div class="col-md-3 mb-3">
