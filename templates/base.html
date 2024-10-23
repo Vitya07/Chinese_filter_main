@@ -64,14 +64,14 @@
         <h1>СЛОВАРЬ ИЕРОГЛИФОВ</h1>
         <nav>
             {% if 'user_id' in session %}
-                <a href="{{ url_for('add_words') }}">Добавить слова</a>
-                <a href="{{ url_for('filter_words') }}">Показать уникальные иероглифы</a>
+                <a href="{{ url_for('create_document') }}">Создать документ</a>
+                <a href="{{ url_for('view_documents') }}">Просмотреть документы</a>
                 <a href="{{ url_for('logout') }}">Выйти</a>
             {% else %}
                 <a href="{{ url_for('login') }}">Вход</a>
                 <a href="{{ url_for('register') }}">Регистрация</a>
             {% endif %}
-        </nav>
+        </nav>        
     </header>
     <main>
         {% with messages = get_flashed_messages() %}
@@ -84,11 +84,9 @@
             {% endif %}
         {% endwith %}
         {% block content %}{% endblock %}
-                
     </main>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
-
