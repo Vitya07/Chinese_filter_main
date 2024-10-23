@@ -1,1 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Создать новый документ</h2>
+    <form method="POST" class="p-4 border rounded shadow-sm bg-light">
+        <div class="form-group mb-3">
+            <label for="doc_name" class="form-label">Название документа:</label>
+            <input type="text" name="doc_name" class="form-control" placeholder="Введите название документа" required>
+        </div>
+        <button type="submit" class="btn btn-custom btn-block">Создать</button>
+    </form>
+</div>
+
+<!-- Добавьте иконку для кнопки создания -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMd/GhP3TA2sXb21WQnU4F6lBXuj2U8v9CO4g" crossorigin="anonymous"></script>
+
+<style>
+    .btn-custom {
+        background-color: #007bff; /* Цвет фона */
+        border: none; /* Убираем границу */
+        color: white; /* Цвет текста */
+        transition: background-color 0.3s, transform 0.3s; /* Плавный переход */
+    }
+
+    .btn-custom:hover {
+        background-color: #0056b3; /* Цвет фона при наведении */
+        transform: scale(1.05); /* Легкое увеличение при наведении */
+    }
+
+    .form-group label {
+        font-weight: bold; /* Жирный текст для метки */
+    }
+
+    .form-control {
+        border-radius: 20px; /* Скругление углов */
+        border: 1px solid #ced4da; /* Цвет границы */
+        transition: border-color 0.3s; /* Плавный переход */
+    }
+
+    .form-control:focus {
+        border-color: #007bff; /* Цвет границы при фокусе */
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Легкая тень при фокусе */
+    }
+
+    .bg-light {
+        background-color: #f8f9fa !important; /* Светлый фон */
+    }
+</style>
+{% endblock %}
 
