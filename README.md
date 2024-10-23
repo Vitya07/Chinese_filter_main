@@ -10,3 +10,6 @@
 
 
 todo: add a mini application to test your knowledge of hieroglyphs, when I know more I’ll add more
+
+
+доработал профиль 
