@@ -70,7 +70,7 @@ def login():
         user = User.query.filter_by(username=username, password=password).first()
         if user:
             session['user_id'] = user.id
-            flash('Вы успешно вошли в систему!')  # Сообщение об успешном входе
+            #flash('Вы успешно вошли в систему!')  # Сообщение об успешном входе
             return redirect(url_for('view_documents'))
         else:
             flash('Неверные учетные данные!')  # Сообщение об ошибке
