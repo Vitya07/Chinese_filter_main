@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Ваши документы</h2>
+    <ul class="list-group">
+        {% for document in documents %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>{{ loop.index }}. {{ document.name }}</span>
+                <div>
+                    <a href="{{ url_for('add_words', document_id=document.id) }}" class="btn btn-sm btn-outline-primary">Добавить иероглифы</a>
+                    <a href="{{ url_for('filter_words', document_id=document.id) }}" class="btn btn-sm btn-outline-secondary">Просмотреть иероглифы</a>
+                    <a href="{{ url_for('download', document_id=document.id) }}" class="btn btn-sm btn-outline-success">Скачать документ</a>
+                    <form action="{{ url_for('delete_document', document_id=document.id) }}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                    </form>
+                </div>
+            </li>
+        {% else %}
+            <li class="list-group-item">У вас нет документов.</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('create_document') }}" class="btn btn-primary mt-3">Создать новый документ</a>
+</div>
+{% endblock %}
