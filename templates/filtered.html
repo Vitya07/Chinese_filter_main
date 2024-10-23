@@ -96,7 +96,7 @@
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = url;
-            a.download = '{{ document_name }}.docx';  // Установите имя файла из имени документа
+            a.download = '{{ document_name }}_download_selected.docx';  // Установите имя файла из имени документа
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
