@@ -1,22 +1,29 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<div class="container mt-5">
-    <h2 class="text-center mb-4">Добавить слова</h2>
-    <form method="POST" action="{{ url_for('add_words') }}" class="p-4 border rounded shadow-lg bg-light animated-form">
+<div class="container">
+    <h2 class="text-center mb-4">Добавить иероглифы</h2>
+    <form method="POST" class="animated-form text-center">
         <div class="form-group">
             <label for="words">Введите слова (через запятую или пробел):</label>
-            <textarea id="words" name="words" class="form-control form-control-lg" rows="3" required></textarea>
+            <textarea class="form-control" id="words" name="words" required placeholder="Введите слова здесь" rows="3" oninput="adjustHeight(this)"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary btn-block">Добавить</button>
+        <button type="submit" class="btn btn-primary" style="width: 200px; height: 40px; font-size: 16px; margin-top: 15px;">Добавить</button>
     </form>
+    <div class="text-center mt-3">
+        <a href="{{ url_for('view_documents') }}" class="btn btn-secondary" style="width: 200px; height: 40px; font-size: 16px;">Назад к документам</a>
+    </div>
 </div>
 
 <style>
     .animated-form {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        max-width: 600px; /* Ограничиваем ширину формы */
+        max-width: 500px; /* Ограничиваем ширину формы */
         margin: auto; /* Центрируем форму */
-        min-height: 200px; /* Устанавливаем минимальную высоту формы */
+        padding: 20px; /* Добавляем отступы внутри формы */
+        border-radius: 8px; /* Закругленные углы */
+        background-color: #ffffff; /* Белый фон формы */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Легкая тень */
     }
 
     .animated-form:hover {
@@ -24,14 +31,9 @@
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Увеличенная тень при наведении */
     }
 
-    textarea {
-        transition: height 0.2s ease; /* Плавный переход высоты текстового поля */
-        min-height: 80px; /* Минимальная высота текстового поля */
-        resize: vertical; /* Разрешаем изменять размер только по вертикали */
-    }
-
     .btn {
         transition: background-color 0.3s ease, transform 0.3s ease;
+        border-radius: 5px; /* Закругленные углы кнопок */
     }
 
     .btn:hover {
@@ -42,5 +44,24 @@
     h2 {
         color: #343a40; /* Цвет заголовка */
     }
+
+    label {
+        font-size: 16px; /* Размер шрифта для метки */
+    }
+
+    textarea {
+        transition: height 0.2s ease; /* Плавный переход высоты текстового поля */
+        min-height: 80px; /* Минимальная высота текстового поля */
+        max-height: 300px; /* Максимальная высота текстового поля */
+        resize: none; /* Запретить изменение размера вручную */
+    }
 </style>
+
+<script>
+    function adjustHeight(element) {
+        element.style.height = 'auto'; // Сначала сбрасываем высоту
+        element.style.height = element.scrollHeight + 'px'; // Устанавливаем высоту равной высоте содержимого
+    }
+</script>
+
 {% endblock %}
