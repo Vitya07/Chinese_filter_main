@@ -45,11 +45,9 @@
                     <li><a href="{{ url_for('download', document_id=document_id) }}" class="dropdown-item">Скачать все в Word</a></li>
                     <li class="dropdown-divider"></li>
                     <li>
-                            <div class="mt-4 text-center">
-            <form action="{{ url_for('clear_words', document_id=document_id) }}" method="POST">
-                <button type="submit" class="btn btn-danger">Очистить слова</button>
-            </form>       
-                     </div>
+                        <button class="dropdown-item text-danger" id="clear-words-button">
+                            <i class="fas fa-trash-alt me-2"></i> Очистить слова
+                        </button>
                     </li>
                 </ul>
             </div>
@@ -88,17 +86,14 @@
             </form>
         </div>
     </div>
-    
-    <div class="mt-4 text-center">
-        <!-- Убрали кнопку "Очистить слова" из этой секции -->
-    </div>
-    
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- JS логика -->
     <script>
+        // Обработчик для выбора всех чекбоксов
         document.getElementById('select-all').addEventListener('change', function() {
             const isChecked = this.checked;
             document.querySelectorAll('input[name="selected_chars"]').forEach(checkbox => {
@@ -106,7 +101,9 @@
             });
         });
 
-        document.getElementById('clear-words-button').addEventListener('click', function() {
+        // Обработчик очистки слов
+        document.getElementById('clear-words-button').addEventListener('click', function(event) {
+            event.preventDefault(); // Предотвращаем отправку формы
             const form = document.getElementById('character-form');
             form.reset(); // Сбрасываем все чекбоксы
             showAlert('Все слова были очищены.');
@@ -191,6 +188,7 @@
                 showAlert('Нет доступных иероглифов для копирования.');
             } else {
                 copyToClipboard(allCharacters.join('\t'));
+                showAlert('Все иероглифы скопированы горизонтально.');
             }
         });
 
@@ -201,6 +199,7 @@
                 showAlert('Нет доступных иероглифов для копирования.');
             } else {
                 copyToClipboard(allCharacters.join('\n'));
+                showAlert('Все иероглифы скопированы вертикально.');
             }
         });
 
@@ -210,6 +209,7 @@
                 showAlert('Пожалуйста, выберите хотя бы один иероглиф.');
             } else {
                 copyToClipboard(selectedCharacters.join('\t'));
+                showAlert('Выбранные иероглифы скопированы горизонтально.');
             }
         });
 
@@ -219,6 +219,7 @@
                 showAlert('Пожалуйста, выберите хотя бы один иероглиф.');
             } else {
                 copyToClipboard(selectedCharacters.join('\n'));
+                showAlert('Выбранные иероглифы скопированы вертикально.');
             }
         });
     </script>
