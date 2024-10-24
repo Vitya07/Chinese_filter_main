@@ -103,12 +103,33 @@
 
         // Обработчик очистки слов
         document.getElementById('clear-words-button').addEventListener('click', function(event) {
-            event.preventDefault(); // Предотвращаем отправку формы
-            const form = document.getElementById('character-form');
-            form.reset(); // Сбрасываем все чекбоксы
-            showAlert('Все слова были очищены.');
+            event.preventDefault();  // Предотвращаем перезагрузку страницы
+        
+            const documentId = '{{ document_id }}';  // Подставляем ID документа
+        
+            fetch(`/clear_words/${documentId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    showAlert('Все слова успешно очищены.');
+                    setTimeout(() => location.reload(), 1000);  // Перезагрузка страницы через 1 сек
+                } else {
+                    showAlert(data.error || 'Ошибка при очистке слов.');
+                }
+            })
+            .catch(error => {
+                showAlert('Произошла ошибка: ' + error.message);
+            });
         });
-
+        
         function showAlert(message) {
             const alertContainer = document.getElementById('alert-container');
             alertContainer.innerHTML = `<div class="alert alert-warning alert-dismissible fade show" role="alert" style="font-size: 1.5rem; padding: 15px;">
