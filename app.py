@@ -283,4 +283,21 @@ def delete_document(document_id):
         flash('Документ не найден или у вас нет доступа к нему.')  # Сообщение об ошибке
     return redirect(url_for('view_documents'))
 
+@app.route('/rename_document/<int:document_id>', methods=['POST'])
+def rename_document(document_id):
+    if 'user_id' not in session:
+        return jsonify({'error': 'Необходимо войти в систему'}), 403
 
+    document = UserDocument.query.get(document_id)
+    if document and document.user_id == session['user_id']:
+        new_name = request.form['new_name'].strip()
+        if new_name:
+            document.name = new_name
+            db.session.commit()
+            flash('Документ успешно переименован!')  # Сообщение об успешном переименовании
+        else:
+            flash('Имя документа не может быть пустым.')  # Сообщение об ошибке
+    else:
+        flash('Документ не найден или у вас нет доступа к нему.')  # Сообщение об ошибке
+
+    return redirect(url_for('view_documents'))
