@@ -215,17 +215,20 @@ def download_selected(document_id):
 
 
 
-# Очистка всех слов пользователя
 @app.route('/clear_words/<int:document_id>', methods=['POST'])
 def clear_words(document_id):
     if 'user_id' not in session:
         return jsonify({'error': 'Необходимо войти в систему'}), 403
 
     user_id = session['user_id']
-    Word.query.filter_by(user_id=user_id, document_id=document_id).delete()  # Удаляем все слова пользователя для конкретного документа
-    db.session.commit()
-    #flash('Все иероглифы были очищены!')  # Сообщение об успешной очистке
-    return redirect(url_for('view_documents', document_id=document_id))  # Перенаправляем на страницу добавления слов с указанием document_id
+    try:
+        # Удаляем все слова пользователя для конкретного документа
+        Word.query.filter_by(user_id=user_id, document_id=document_id).delete()
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'Все слова успешно очищены.'})
+    except Exception as e:
+        db.session.rollback()  # Откат транзакции в случае ошибки
+        return jsonify({'error': f'Ошибка при удалении: {str(e)}'}), 500
 
 
 # Создание документа
