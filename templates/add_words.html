@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container">
-    <h2 class="text-center mb-4">Добавить иероглифы</h2>
+    <h4 class="text-center mb-4">Документ: {{ document_name }}</h4> 
     <form method="POST" class="animated-form text-center">
         <div class="form-group">
             <label for="words">Введите слова (через запятую или пробел):</label>
@@ -41,7 +41,7 @@
         transform: scale(1.05); /* Увеличение кнопки при наведении */
     }
 
-    h2 {
+    h4 {
         color: #343a40; /* Цвет заголовка */
     }
 
